@@ -68,6 +68,17 @@ extern void cpu_load_update_active(struct rq *this_rq);
 static inline void cpu_load_update_active(struct rq *this_rq) { }
 #endif
 
+unsigned long nohz_flags;
+
+#ifdef CONFIG_NO_HZ
+enum rq_nohz_flag_bits {
+	NOHZ_TICK_STOPPED,
+	NOHZ_BALANCE_KICK,
+};
+
+#define nohz_flags(cpu)	(&cpu_rq(cpu)->nohz_flags)
+#endif
+	
 /*
  * Helpers for converting nanosecond timing to jiffy resolution
  */
@@ -785,6 +796,7 @@ struct rq {
 #endif /* CONFIG_NO_HZ_COMMON */
 #ifdef CONFIG_NO_HZ_FULL
 	unsigned long last_sched_tick;
+        
 #endif
 	/* capture load from *all* tasks on this cpu: */
 	struct load_weight load;
